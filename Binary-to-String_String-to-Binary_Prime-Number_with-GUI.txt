@@ -1,0 +1,198 @@
+# validation for prime number entry
+def callback(inputp):
+    if inputp.isdigit():
+
+        return True
+    else:
+
+        return False
+
+
+# validation for binary number entry
+def callback2(inputb):
+    if re.search("[0,1]", inputb):
+
+        return True
+    else:
+
+        return False
+
+
+def PrimeDashboard():
+    def Prime(primee, stringl):
+        flag = 0
+        stringl.config(state=NORMAL)
+
+        q = int(primee.get())
+        if q == 0 or q == 1:
+            stringl.insert(END, f'{q} is not prime and not composite\n')
+        else:
+            for i in range(2, q):
+                if q % i == 0:
+                    stringl.insert(END, f'{q} is not prime\n')
+                    flag = 0
+                    break
+                else:
+                    flag = 1
+            if flag == 1:
+                stringl.insert(END, f'{q} is prime\n')
+        stringl.config(state=DISABLED)
+
+    prime = Toplevel()
+    # btos.geometry("400x400+450+100")
+    prime.title("Prime Number")
+    prime.focus_force()
+    prime.config(bg="black")
+
+    fontStyle = Font.Font(family="Lucida Grande", size=20)
+
+    bineryv = StringVar()
+    regp = prime.register(callback)
+    Label(prime, font=fontStyle, bg="#222831", bd=10, fg="white", text="Enter Number:").pack(side=TOP, anchor=W)
+    primee = Entry(prime, validate="key", validatecommand=(regp, '%S'), textvariable="bineryv", font=fontStyle,
+                    bg="green", bd=10, fg="white")
+
+    primee.pack(ipadx=500)
+
+    stringv = StringVar()
+    stringl = Text(prime, bg="green", bd=10, font=fontStyle, fg="white", state=DISABLED)
+    Button(prime, text="Convert", width=10, font=fontStyle, height=1, bg="red",
+           command=lambda: Prime(primee, stringl)).pack(
+        ipadx=20, ipady=5)
+
+    Button(prime, text="Back", width=10, font=fontStyle, height=1, bg="red",
+           command=lambda: prime.destroy()).pack(ipadx=20, ipady=5, side=TOP)
+
+    stringl.pack(ipadx=140)
+
+    # prime.mainloop()
+
+
+def BineryToStringDashboard():
+    def BineryToString(binerye, stringl):
+        def BineryToString1(binerye):
+            number = 0
+            counter = 0
+            reverse_bin = binerye[::-1]
+            for bit in reverse_bin:
+                number += int(bit) * (pow(2, counter))
+                counter += 1
+            return number
+
+        binery_char = ""
+        i = 0
+
+        if len(binerye.get()) % 8 == 0:
+            for n in range(len(binerye.get()) // 8):
+                binery_char += chr(BineryToString1(binerye.get()[i:i + 8]))
+                i += 8
+        stringl.config(state=NORMAL)
+        stringl.delete("1.0", END)
+        stringl.insert(END, binery_char + "\n")
+        stringl.config(state=DISABLED)
+
+    btos = Toplevel()
+    # btos.geometry("400x400+450+100")
+    btos.title("Convert Binery To String")
+    btos.focus_force()
+    btos.config(bg="black")
+
+    fontStyle = Font.Font(family="Lucida Grande", size=20)
+    bineryv = StringVar()
+    regb = btos.register(callback2)
+
+    Label(btos, font=fontStyle, bg="#222831", bd=10, fg="white", text="Enter Binery:").pack(side=TOP, anchor=W)
+    binerybtos = Entry(btos, validate="key", validatecommand=(regb, '%S'), textvariable="bineryv", font=fontStyle,
+                       bg="green", bd=10, fg="white")
+    binerybtos.pack(ipadx=500, ipady=50, side=TOP, fill=X)
+
+    stringv = StringVar()
+    stringl = Text(btos, bg="green", bd=10, font=fontStyle, fg="white", state=DISABLED)
+
+    Button(btos, text="Convert", width=10, font=fontStyle, height=1, bg="red",
+           command=lambda: BineryToString(binerybtos, stringl)).pack(ipadx=20, ipady=5, side=TOP)
+
+    Button(btos, text="Back", width=10, font=fontStyle, height=1, bg="red",
+           command=lambda: btos.destroy()).pack(ipadx=20, ipady=5, side=TOP)
+
+    stringl.pack(ipadx=140, side=TOP, fill=X)
+
+    # btos.mainloop()
+
+
+def StringToBineryDashboard():
+    def StringToBinery(binerye, stringl):
+
+        def StringToBinery1(binerye):
+
+            s = ""
+            while binerye != 0:
+                s = str(binerye % 2) + s
+                binerye //= 2
+            return s
+
+        st = ""
+
+        for ch in binerye.get("1.0", 'end-1c'):
+            binery = StringToBinery1(ord(ch))
+            st += (8 - len(binery)) * "0" + binery
+
+        stringl.config(state=NORMAL)
+        stringl.delete("1.0", END)
+        stringl.insert(END, st)
+        stringl.config(state=DISABLED)
+
+    btos = Toplevel()
+    # btos.geometry("400x400+450+100")
+    btos.title("Convert String To Binery")
+    btos.focus_force()
+    btos.config(bg="black")
+
+    fontStyle = Font.Font(family="Lucida Grande", size=20)
+    bineryv = StringVar()
+    Label(btos, font=fontStyle, bg="#222831", bd=10, fg="white", text="Enter Text:").pack(side=TOP, anchor=W)
+    binerye = Text(btos, height=6, font=fontStyle, bg="green", bd=10, fg="white")
+    binerye.pack(ipadx=140)
+
+    stringv = StringVar()
+    stringl = Text(btos, bg="green", bd=10, font=fontStyle, fg="white", state=DISABLED)
+    Button(btos, text="Convert", width=10, font=fontStyle, height=1, bg="red",
+           command=lambda: StringToBinery(binerye, stringl)).pack(ipadx=20, ipady=5)
+
+    Button(btos, text="Back", width=10, font=fontStyle, height=1, bg="red",
+           command=lambda: btos.destroy()).pack(ipadx=20, ipady=5, side=TOP)
+
+    stringl.pack(ipadx=140)
+
+    # btos.mainloop()
+
+
+from tkinter import *
+import tkinter.font as Font
+import re
+
+dash = Tk()
+
+dash.geometry("1286x650+0+0")
+# dash.resizable(False, False)
+dash.title("Dashboard")
+dash.config(bg="black")
+
+fontStyle = Font.Font(family="Lucida Grande", size=20)
+
+frametop = Frame(dash).pack(pady=90)
+
+Button(frametop, text="Binery to String", font=fontStyle, command=BineryToStringDashboard, bg="pink").pack(ipady=10,
+                                                                                                           ipadx=10)
+
+Button(frametop, text="String to Binery", font=fontStyle, command=StringToBineryDashboard, bg="pink").pack(ipady=10,
+                                                                                                           ipadx=10,
+                                                                                                           pady=10)
+
+Button(frametop, text=" Prime Number ", font=fontStyle, command=PrimeDashboard, bg="pink").pack(ipady=10, ipadx=10)
+
+Button(frametop, text="      Exit      ", font=fontStyle, command=lambda: dash.destroy(), bg="pink").pack(ipady=10,
+                                                                                                          ipadx=10,
+                                                                                                          pady=10)
+
+dash.mainloop()
